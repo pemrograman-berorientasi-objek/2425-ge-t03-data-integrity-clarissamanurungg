@@ -1,4 +1,5 @@
 package academic.driver;
+
 import java.util.*;
 import academic.model.Enrollment;
 import academic.model.Course;
@@ -8,114 +9,107 @@ public class Driver2 {
 
     public static void main(String[] _args) {
         Scanner scanner = new Scanner(System.in);
-        int y = 0;
-        String command;
-        int indexCourse = 0;
-        int indexStd = 0;
-        int indexErl = 0;
+        int indexCourse = 0, indexStd = 0, indexErl = 0;
         Student[] studentStd = new Student[100];
-        Student[] studentErl = new Student[100];
-        Course[] c = new Course[100];
-        Course[] cErl = new Course[100];
-        Enrollment[] enroll = new Enrollment[100];
-        List<String> invalidEntries = new ArrayList<>();
+        Course[] courses = new Course[100];
+        Enrollment[] enrollments = new Enrollment[100];
+        Set<String> invalidEntries = new LinkedHashSet<>(); // To store invalid entries without duplicates
 
-        while (scanner.hasNextLine() && y == 0) {
-            command = scanner.nextLine();
-            String[] pecahan = command.split("#");
+        while (scanner.hasNextLine()) {
+            String command = scanner.nextLine();
+            String[] tokens = command.split("#");
 
-            if (pecahan[0].equals("course-add")) {
-                String code = pecahan[1];
-                String temp_matkul = pecahan[2];
-                String temp_sks = pecahan[3];
-                String temp_grade = pecahan[4];
+            if (tokens[0].equals("course-add")) {
+                String code = tokens[1];
+                String name = tokens[2];
+                String credits = tokens[3];
+                String grade = tokens[4];
 
-                boolean sama = false;
+                boolean exists = false;
                 for (int i = 0; i < indexCourse; i++) {
-                    if (c[i].getCode().equalsIgnoreCase(code)) {
-                        sama = true;
+                    if (courses[i].getCode().equalsIgnoreCase(code)) {
+                        exists = true;
+                        break;
                     }
                 }
-                if (!sama) {
-                    c[indexCourse] = new Course(code, temp_matkul, temp_sks, temp_grade);
-                    indexCourse++;
+                if (!exists) {
+                    courses[indexCourse++] = new Course(code, name, credits, grade);
                 }
-            }
+            } else if (tokens[0].equals("student-add")) {
+                String id = tokens[1];
+                String name = tokens[2];
+                String year = tokens[3];
+                String program = tokens[4];
 
-            if (pecahan[0].equals("student-add")) {
-                String nim = pecahan[1];
-                String nama = pecahan[2];
-                String year = pecahan[3];
-                String std_pgr = pecahan[4];
-
-                boolean sama = false;
-                for (int i = 0; i < indexStd; i++) {
-                    if (studentStd[i].getName().equalsIgnoreCase(nama)) {
-                        sama = true;
-                    }
-                }
-                if (!sama) {
-                    studentStd[indexStd] = new Student(nim, nama, year, std_pgr);
-                    indexStd++;
-                }
-            }
-
-            if (pecahan[0].equals("enrollment-add")) {
-                String code = pecahan[1];
-                String id = pecahan[2];
-                String year = pecahan[3];
-                String semester = pecahan[4];
-
-                boolean studentExists = false;
+                boolean exists = false;
                 for (int i = 0; i < indexStd; i++) {
                     if (studentStd[i].getId().equalsIgnoreCase(id)) {
-                        studentExists = true;
-                        studentErl[indexErl] = studentStd[i];
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    studentStd[indexStd++] = new Student(id, name, year, program);
+                }
+            } else if (tokens[0].equals("enrollment-add")) {
+                String courseCode = tokens[1];
+                String studentId = tokens[2];
+                String year = tokens[3];
+                String semester = tokens[4];
+
+                boolean validStudent = false, validCourse = false;
+                Student matchedStudent = null;
+                Course matchedCourse = null;
+
+                for (int i = 0; i < indexStd; i++) {
+                    if (studentStd[i].getId().equalsIgnoreCase(studentId)) {
+                        validStudent = true;
+                        matchedStudent = studentStd[i];
                         break;
                     }
                 }
 
-                boolean courseExists = false;
                 for (int i = 0; i < indexCourse; i++) {
-                    if (c[i].getCode().equalsIgnoreCase(code)) {
-                        courseExists = true;
-                        cErl[indexErl] = c[i];
+                    if (courses[i].getCode().equalsIgnoreCase(courseCode)) {
+                        validCourse = true;
+                        matchedCourse = courses[i];
                         break;
                     }
                 }
 
-                if (!studentExists) {
-                    invalidEntries.add("invalid student|" + id);
-                } else if (!courseExists) {
-                    invalidEntries.add("invalid course|" + code);
-                } else {
-                    enroll[indexErl] = new Enrollment(cErl[indexErl], studentErl[indexErl], year, semester);
-                    indexErl++;
+                if (!validStudent) {
+                    invalidEntries.add("invalid student|" + studentId); // Avoid duplicates
                 }
-            }
+                if (!validCourse) {
+                    invalidEntries.add("invalid course|" + courseCode); // Avoid duplicates
+                }
 
-            if (pecahan[0].equals("---")) {
-                y = 54;
+                if (validStudent && validCourse) {
+                    enrollments[indexErl++] = new Enrollment(matchedCourse, matchedStudent, year, semester);
+                }
+            } else if (tokens[0].equals("---")) {
                 break;
             }
         }
 
         scanner.close();
 
+        // Output invalid entries
         invalidEntries.forEach(System.out::println);
 
-        Arrays.sort(c, 0, indexCourse, Comparator.comparing(Course::getCode));
-        Arrays.sort(studentStd, 0, indexStd, Comparator.comparing(Student::getId));
-        Arrays.sort(enroll, 0, indexErl, Comparator.comparing(e -> e.getCourse().getCode()));
+        // Output courses
+        for (int i = indexCourse - 1; i >= 0; i--) {
+            System.out.println(courses[i]);
+        }
 
-        for (int i = 0; i < indexCourse; i++) {
-            System.out.println(c[i]);
+        // Output students
+        for (int i = 0; i < indexStd; i++) {
+            System.out.println(studentStd[i]);
         }
-        for (int x = 0; x < indexStd; x++) {
-            System.out.println(studentStd[x]);
-        }
-        for (int z = 0; z < indexErl; z++) {
-            System.out.println(enroll[z] + "|None");
+
+        // Output enrollments
+        for (int i = 0; i < indexErl; i++) {
+            System.out.println(enrollments[i] + "|None");
         }
     }
 }
