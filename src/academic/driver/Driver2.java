@@ -1,5 +1,4 @@
 package academic.driver;
-
 import java.util.*;
 import academic.model.Enrollment;
 import academic.model.Course;
@@ -12,29 +11,31 @@ import academic.model.Student;
 public class Driver2 {
 
     public static void main(String[] _args) {
-        Scanner scanner = new Scanner(System.in);
+        Scanner input = new Scanner(System.in);
+        String str;
         List<String> courses = new ArrayList<>();
         List<String> students = new ArrayList<>();
-        List<String> enrollments = new ArrayList<>();
+        List<String> enrolList = new ArrayList<>();
         List<String> invalidEntries = new ArrayList<>();
-        
-        while (scanner.hasNextLine()) {
-            String input = scanner.nextLine();
-            String[] tokens = input.split("#");
-            
+        List<String> enrollments = new ArrayList<>();
+
+        while (input.hasNextLine()) {
+            str = input.nextLine();
+            String[] tokens = str.split("#");
             switch (tokens[0]) {
-                case "course-add":
-                    courses.add(String.join("|", Arrays.copyOfRange(tokens, 1, tokens.length)));
-                    break;
-                case "student-add":
-                    students.add(String.join("|", Arrays.copyOfRange(tokens, 1, tokens.length)));
-                    break;
-                case "enrollment-add":
+                case "course":
                     String courseId = tokens[1];
-                    String studentId = tokens[2];
-                    boolean courseExists = courses.stream().anyMatch(course -> course.startsWith(courseId));
-                    boolean studentExists = students.stream().anyMatch(student -> student.startsWith(studentId));
-                    
+                    courses.add(courseId);
+                    break;
+                case "student":
+                    String studentId = tokens[1];
+                    students.add(studentId);
+                    break;
+                case "enroll":
+                    studentId = tokens[1];
+                    courseId = tokens[2];
+                    boolean studentExists = students.contains(studentId);
+                    boolean courseExists = courses.contains(courseId);
                     if (!studentExists) {
                         invalidEntries.add("invalid student|" + studentId);
                     } else if (!courseExists) {
@@ -46,12 +47,16 @@ public class Driver2 {
                 default:
                     break;
             }
-            
-            if (input.equals("---")) {
-                invalidEntries.forEach(System.out::println);
-                courses.forEach(System.out::println);
-                students.forEach(System.out::println);
-                enrollments.forEach(System.out::println);
+            if (str.equals("---")) {
+                for (String course : courses) {
+                    System.out.println(course);
+                }
+                for (String student : students) {
+                    System.out.println(student);
+                }
+                for (String enrol : enrollments) {
+                    System.out.println(enrol);
+                }
                 System.exit(0);
             }
         }
