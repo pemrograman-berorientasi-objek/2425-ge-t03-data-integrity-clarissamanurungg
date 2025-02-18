@@ -4,15 +4,6 @@ import academic.model.Enrollment;
 import academic.model.Course;
 import academic.model.Student;
 
-/**
-    * 12S23042 Pretty Purba
-    * 12S23049 Clarissa Manurung
- */
-import java.util.*;
-import academic.model.Enrollment;
-import academic.model.Course;
-import academic.model.Student;
-
 public class Driver2 {
 
     public static void main(String[] _args) {
@@ -112,6 +103,11 @@ public class Driver2 {
         scanner.close();
 
         invalidEntries.forEach(System.out::println);
+
+        Arrays.sort(c, 0, indexCourse, Comparator.comparing(Course::getCode));
+        Arrays.sort(studentStd, 0, indexStd, Comparator.comparing(Student::getId));
+        Arrays.sort(enroll, 0, indexErl, Comparator.comparing(e -> e.getCourse().getCode()));
+
         for (int i = 0; i < indexCourse; i++) {
             System.out.println(c[i]);
         }
@@ -119,7 +115,7 @@ public class Driver2 {
             System.out.println(studentStd[x]);
         }
         for (int z = 0; z < indexErl; z++) {
-            System.out.println(enroll[z]);
+            System.out.println(enroll[z] + "|None");
         }
     }
 }

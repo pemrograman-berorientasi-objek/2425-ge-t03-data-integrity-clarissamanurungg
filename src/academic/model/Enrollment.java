@@ -1,29 +1,41 @@
 package academic.model;
 
 /**
-    * 12S23042 Pretty Purba
-    * 12S23049 Clarissa Manurung
+ *  12S23042 Pretty Purba
+ *  12S23049 Clarissa Manurung
  */
-public class Enrollment {
 
-    private  Student student;
-    private  Course course;
+public class Enrollment {
+    private Course course;
+    private Student student;
     private String year;
     private String semester;
-    private String grade = "None";
 
     public Enrollment(Course course, Student student, String year, String semester) {
-        
-        this.student = student;
         this.course = course;
+        this.student = student;
         this.year = year;
         this.semester = semester;
     }
 
-    @Override 
+    public Course getCourse() {
+        return course;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public String getSemester() {
+        return semester;
+    }
+
+    @Override
     public String toString() {
-        return this.course.getCode() + "|" + this.student.getId() + "|" + this.year + "|" + this.semester + "|" + this.grade;
-    } 
-
-
+        return course.getCode() + "|" + student.getId() + "|" + year + "|" + semester;
+    }
 }
