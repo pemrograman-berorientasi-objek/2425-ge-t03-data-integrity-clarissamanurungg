@@ -1,6 +1,8 @@
 package academic.model;
+
 /**
- * @author 12S22031 - Ioka Purba
+    * 12S23042 Pretty Purba
+    * 12S23049 Clarissa Manurung
  */
 public class Enrollment {
 

@@ -41,7 +41,6 @@ public class Driver2 {
             temp_sks = pecahan[3];
             temp_grade = pecahan[4];
 
-
             boolean sama = false;
 
             for(int i = 0; i < indexCourse; i++){
@@ -78,14 +77,10 @@ public class Driver2 {
                 indexStd++;
             }
             
-            
-        
        }
 
        if(pecahan[0].equals("enrollment-add")){
               
-    
-
             studentErl[indexErl] = new Student();
             cErl[indexErl] = new Course();
         
@@ -117,17 +112,15 @@ public class Driver2 {
                     cErl[indexErl].setCode(code);
 
                 }
-            }
-
+            }   
             
-            
-            if(!sama && !doope){
-                System.out.println("invalid student|" + id + " and invalid course|" + code);
-            } else if(!sama){
-                System.out.println("invalid student|" + id);
-            } else if(!doope){
+            if(sama == false && doope == false){
                 System.out.println("invalid course|" + code);
-            }
+            }  else if(sama == false){
+                System.out.println("invalid student|" + id);}
+            else if(doope == false){
+                    System.out.println("invalid course|" + code);
+                }
 
             if(sama == true && doope == true){
                 enroll[indexErl] = new Enrollment(cErl[indexErl], studentErl[indexErl], year, semester); 
@@ -135,19 +128,15 @@ public class Driver2 {
             }
         
        }
-
-    
        
         if (pecahan[0].equals("---")){  
             y = 54;
             break;
         }
-        
-        
+          
     }
  
     scanner.close();
-
 
     for(int i = indexCourse-1; i >= 0; i--){
         System.out.println(c[i]);
