@@ -13,7 +13,7 @@ public class Driver2 {
         Student[] studentStd = new Student[100];
         Course[] courses = new Course[100];
         Enrollment[] enrollments = new Enrollment[100];
-        Set<String> invalidEntries = new LinkedHashSet<>(); // To store invalid entries without duplicates
+        Set<String> invalidEntries = new LinkedHashSet<>(); // Menghindari duplikasi entri tidak valid
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
@@ -78,10 +78,10 @@ public class Driver2 {
                 }
 
                 if (!validStudent) {
-                    invalidEntries.add("invalid student|" + studentId); // Avoid duplicates
+                    invalidEntries.add("invalid student|" + studentId); // Hindari duplikasi
                 }
                 if (!validCourse) {
-                    invalidEntries.add("invalid course|" + courseCode); // Avoid duplicates
+                    invalidEntries.add("invalid course|" + courseCode); // Hindari duplikasi
                 }
 
                 if (validStudent && validCourse) {
@@ -98,16 +98,19 @@ public class Driver2 {
         invalidEntries.forEach(System.out::println);
 
         // Output courses
-        for (int i = indexCourse - 1; i >= 0; i--) {
+        Arrays.sort(courses, 0, indexCourse, Comparator.comparing(Course::getCode));
+        for (int i = 0; i < indexCourse; i++) {
             System.out.println(courses[i]);
         }
 
         // Output students
+        Arrays.sort(studentStd, 0, indexStd, Comparator.comparing(Student::getId));
         for (int i = 0; i < indexStd; i++) {
             System.out.println(studentStd[i]);
         }
 
         // Output enrollments
+        Arrays.sort(enrollments, 0, indexErl, Comparator.comparing(e -> e.getCourse().getCode()));
         for (int i = 0; i < indexErl; i++) {
             System.out.println(enrollments[i] + "|None");
         }
