@@ -1,15 +1,11 @@
 package academic.driver;
+import java.util.*;
+import academic.model.Course;
 
 /**
- * @author NIM Nama
- * @author NIM Nama
+    * 12S23042 Pretty Purba
+    * 12S23049 Clarissa Manurung
  */
 public class Driver1 {
 
-    public static void main(String[] _args) {
-
-        // codes
-
-    }
-
-}
+   
